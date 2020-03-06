@@ -30,6 +30,7 @@
     "morgan": "^1.9.1",
     "ngx-cookie-service": "^2.4.0",
     "rxjs": "~6.5.4",
+    "rxjs-compat": "^6.5.4",
     "tslib": "^1.11.1",
     "zone.js": "~0.10.2"
   },
