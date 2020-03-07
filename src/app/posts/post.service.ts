@@ -15,16 +15,11 @@ export class PostService {
   }
 
   getPostUpdateListener() {
-    // this.postUpdated.next([{ title: "test", content: "test" }]);
-    // this.postUpdated.next([{ title: "test2", content: "test2" }]);
-
-    // return this.postUpdated.asObservable();
     return this.postUpdated.asObservable();
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = { title: title, content: content };
-    this.postUpdated.next([post]);
-    console.log(post);
+  addPost(post: Post) {
+    this.posts.push(post);
+    this.postUpdated.next(this.posts);
   }
 }

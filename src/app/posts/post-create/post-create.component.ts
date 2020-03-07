@@ -13,15 +13,17 @@ import { PostService } from "../post.service";
 })
 @Injectable({ providedIn: "root" })
 export class PostCreateComponent {
-  constructor(public postService: PostService) {}
+  @Output() createPost: EventEmitter<Post[]> = new EventEmitter<Post[]>();
+
+  constructor(public postService: PostService) { }
 
   onAddPost(form: NgForm) {
     if (form.invalid) {
       return;
     }
     console.dir(form);
-    
     const post: Post = { title: form.value.title, content: form.value.content };
-    this.postService.addPost(form.value.title, form.value.content);
+    this.postService.addPost(post);
+    this.createPost.emit(this.postService.getPosts());
   }
 }
