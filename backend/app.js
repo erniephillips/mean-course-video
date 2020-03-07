@@ -41,10 +41,14 @@ app.post("/api/posts", (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  post.save(); //save to database -- mongoose creates query in bg to save to db
-  res.status(201).json({
-    message: "Post added successfully"
-  });
+  post.save().then(
+    createdPost => {
+      res.status(201).json({
+        message: "Post added successfully",
+        postId: createdPost._id
+      });
+    }
+  ); //save to database -- mongoose creates query in bg to save to db
 });
 
 app.get("/api/posts", (req, res, next) => {
