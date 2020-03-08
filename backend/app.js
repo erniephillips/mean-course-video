@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -21,6 +22,10 @@ mongoose
 //install body-parser to access posted data
 app.use(bodyParser.json()); //parses body of requests to json data for easy reading
 //this is for parsing url encoded data to json: app.use(bodyParser.urlencoded({ extended: false }));
+
+//images folder needs to be made accessable, it is blocked by default
+app.use("/images", express.static(path.join("backend/images"))); //any request to images folder will be allowed to access static content
+//^^^path.join makes sure requests to /images folder are forwarded to backend/images location
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
