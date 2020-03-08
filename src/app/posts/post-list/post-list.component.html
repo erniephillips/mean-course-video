@@ -10,8 +10,18 @@
     <p>{{ post.content }}</p>
     <mat-action-row>
       <a mat-button [routerLink]="['/edit', post.id]">EDIT</a>
-      <button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>
+      <button mat-button color="warn" (click)="onDelete(post.id)">
+        DELETE
+      </button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p *ngIf="posts.length <= 0 && !isLoading" class="info-text mat-body-1">No posts added yet</p>
+<mat-paginator
+  [length]="totalPosts"
+  [pageSize]="postsPerPage"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onChangedPage($event)"
+  *ngIf="posts.length > 0"></mat-paginator>
+<p *ngIf="posts.length <= 0 && !isLoading" class="info-text mat-body-1">
+  No posts added yet
+</p>

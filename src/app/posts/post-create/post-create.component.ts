@@ -11,9 +11,9 @@ import { mimeType } from './mime-type.validator';
   styleUrls: ["./post-create.component.css"]
 })
 export class PostCreateComponent implements OnInit {
-  isLoading = false;
   post: Post;
   form: FormGroup;
+  isLoading = false;
   imagePreview: string;
 
   private mode = "create";

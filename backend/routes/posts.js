@@ -33,12 +33,27 @@ const storage = multer.diskStorage({
 });
 
 router.get("", (req, res, next) => {
-  const posts = new Post();
-  Post.find().then(documents => {
+  //handle pagination
+  //adding a plus in front of string converts to a number
+  const pageSize = +req.query.pagesize; //for pagination
+  const currentPage = +req.query.page;
+  const postQuery = Post.find();
+  let fetchedPosts;
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  //grab all results if page size or current page equal to null
+  postQuery.find()
+  .then(documents => {
+    fetchedPosts = documents;
+    return Post.count();
+  }).then(count => {
     res.status(200).json({
       //res.status must be in .then callback, see comment below
       message: "Posts fetched successfully!",
-      posts: documents //fetching data is an async task so a response can be sent outside of post.Find().
+      posts: fetchedPosts, //fetching data is an async task so a response can be sent outside of post.Find().
+      maxPosts: count
     });
   });
 });
@@ -82,7 +97,7 @@ router.put(
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     let imagePath = req.body.imagePath;
-    if(req.file){
+    if (req.file) {
       const url = req.protocol + "://" + req.get("host");
       imagePath = url + "/images/" + req.file.filename;
     }
