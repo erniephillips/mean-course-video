@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
 import { stringify } from "querystring";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: "root" })
 export class PostService {
@@ -11,7 +12,9 @@ export class PostService {
   private posts: Post[] = [];
   private postUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {
+    //add router to re-route user to post list after creating or updating post
+  }
 
   getPostUpdateListener() {
     return this.postUpdated.asObservable();
@@ -56,6 +59,7 @@ export class PostService {
         post.id = postId;
         this.posts.push(post);
         this.postUpdated.next([...this.posts]);
+        this.router.navigate(["/"]);
       });
   }
 
@@ -69,6 +73,7 @@ export class PostService {
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postUpdated.next([...this.posts]);
+        this.router.navigate(["/"]);
       });
   }
 

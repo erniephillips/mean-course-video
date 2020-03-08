@@ -1,8 +1,6 @@
 import { Component, Output, Injectable, OnInit } from "@angular/core";
-import { EventEmitter } from "@angular/core";
 import { Post } from "../post.model";
 import { NgForm } from "@angular/forms";
-import { ValueConverter } from "@angular/compiler/src/render3/view/template";
 import { PostService } from "../post.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
@@ -14,6 +12,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 export class PostCreateComponent implements OnInit {
   private mode = "create";
   private postId: string;
+  isLoading = false;
   post: Post;
 
   //activated route will be used in this case to check if a post is being created or edited, and render form accordingly
@@ -26,7 +25,11 @@ export class PostCreateComponent implements OnInit {
         //postId defined in app-routing.module.ts
         this.mode = "edit";
         this.postId = paramMap.get("postId");
+        //show spinner while fetching result
+        this.isLoading = true;
         this.postService.getPost(this.postId).subscribe(postData => {
+          //hide spinner after fetch
+          this.isLoading = false;
           this.post = {
             id: postData._id,
             title: postData.title,
@@ -45,6 +48,7 @@ export class PostCreateComponent implements OnInit {
       return;
     }
     console.dir(form);
+    this.isLoading = true;
     if (this.mode === "create") {
       this.postService.addPost(form.value.title, form.value.content);
     } else {
