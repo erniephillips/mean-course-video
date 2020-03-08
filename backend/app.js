@@ -2,8 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-//import models
-const Post = require("./models/post");
+const postRoutes = require("./routes/posts");
 
 const app = express(); //return an express app by excuting function
 
@@ -36,37 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post.save().then(
-    createdPost => {
-      res.status(201).json({
-        message: "Post added successfully",
-        postId: createdPost._id
-      });
-    }
-  ); //save to database -- mongoose creates query in bg to save to db
-});
-
-app.get("/api/posts", (req, res, next) => {
-  const posts = new Post();
-  Post.find().then(documents => {
-    res.status(200).json({
-      //res.status must be in .then callback, see comment below
-      message: "Posts fetched successfully!",
-      posts: documents //fetching data is an async task so a response can be sent outside of post.Find().
-    });
-  });
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  Post.deleteOne({ _id: req.params.id }).then(result => {
-    console.log(result);
-    res.status(200).json({ message: "Post of id: " + req.params.id + " deleted!" });
-  });
-});
+//make express aware of post routes
+app.use("/api/posts", postRoutes);
 
 module.exports = app;
