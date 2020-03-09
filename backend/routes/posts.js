@@ -3,6 +3,7 @@ const multer = require("multer");
 
 //import model
 const Post = require("../models/post");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
@@ -44,18 +45,20 @@ router.get("", (req, res, next) => {
   }
 
   //grab all results if page size or current page equal to null
-  postQuery.find()
-  .then(documents => {
-    fetchedPosts = documents;
-    return Post.count();
-  }).then(count => {
-    res.status(200).json({
-      //res.status must be in .then callback, see comment below
-      message: "Posts fetched successfully!",
-      posts: fetchedPosts, //fetching data is an async task so a response can be sent outside of post.Find().
-      maxPosts: count
+  postQuery
+    .find()
+    .then(documents => {
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        //res.status must be in .then callback, see comment below
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts, //fetching data is an async task so a response can be sent outside of post.Find().
+        maxPosts: count
+      });
     });
-  });
 });
 
 router.get("/:id", (req, res, next) => {
@@ -70,6 +73,7 @@ router.get("/:id", (req, res, next) => {
 
 router.post(
   "",
+  checkAuth,
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
@@ -94,6 +98,7 @@ router.post(
 
 router.put(
   "/:id",
+  checkAuth,
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     let imagePath = req.body.imagePath;
@@ -114,7 +119,7 @@ router.put(
   }
 );
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", checkAuth, (req, res, next) => {
   Post.deleteOne({ _id: req.params.id }).then(result => {
     console.log(result);
     res

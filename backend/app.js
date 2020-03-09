@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const postRoutes = require("./routes/posts");
+const userRoutes = require("./routes/user");
 
 const app = express(); //return an express app by excuting function
 
@@ -29,9 +30,9 @@ app.use("/images", express.static(path.join("backend/images"))); //any request t
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
+  res.setHeader( //set all header allowed. Authorization must be allowed by CORS if being set
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -42,5 +43,6 @@ app.use((req, res, next) => {
 
 //make express aware of post routes
 app.use("/api/posts", postRoutes);
+app.use("/api/user", userRoutes);
 
 module.exports = app;
