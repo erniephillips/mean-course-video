@@ -18,7 +18,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { SignupComponent } from "./auth/signup/signup.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { AuthInterceptor } from "./auth/auth-interceptor";
-
+//https://pro.academind.com/courses/765943/lectures/13869616
 @NgModule({
   declarations: [
     AppComponent,
