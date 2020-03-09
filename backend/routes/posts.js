@@ -111,7 +111,8 @@ router.put(
       _id: req.body.id, //declare id as incoming id, or object will think trying to update immutable object and throw error
       title: req.body.title,
       content: req.body.content,
-      imagePath: imagePath
+      imagePath: imagePath,
+      creator: req.userData.userId
     });
     Post.updateOne(
       { _id: req.params.id, creator: req.userData.userId },
